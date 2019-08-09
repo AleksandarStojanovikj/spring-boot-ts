@@ -19,14 +19,46 @@ public class Tweet {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private Long userId;
+    private User user;
 
     public Tweet() {
     }
 
-    public Tweet(String content, LocalDateTime dateOfCreation, Long userId) {
+    public Tweet(String content, LocalDateTime dateOfCreation, User userId) {
         this.content = content;
         this.dateOfCreation = dateOfCreation;
-        this.userId = userId;
+        this.user = userId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public LocalDateTime getDateOfCreation() {
+        return dateOfCreation;
+    }
+
+    public void setDateOfCreation(LocalDateTime dateOfCreation) {
+        this.dateOfCreation = dateOfCreation;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
