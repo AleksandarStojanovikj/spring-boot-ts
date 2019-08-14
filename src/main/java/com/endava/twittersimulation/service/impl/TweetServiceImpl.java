@@ -1,16 +1,20 @@
 package com.endava.twittersimulation.service.impl;
 
-import com.endava.twittersimulation.exceptions.TweetAlreadyExistsException;
 import com.endava.twittersimulation.exceptions.TweetDoesNotExistException;
 import com.endava.twittersimulation.model.Tweet;
+import com.endava.twittersimulation.model.User;
 import com.endava.twittersimulation.repository.TweetRepository;
 import com.endava.twittersimulation.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TweetServiceImpl implements TweetService {
@@ -24,31 +28,25 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public Tweet save(Tweet tweet) {
-        Optional<Tweet> existingTweet = tweetRepository.findById(tweet.getId());
-
-        if (existingTweet.isPresent()) {
-            throw new TweetAlreadyExistsException();
-        }
-
         return tweetRepository.save(tweet);
     }
 
     @Override
-    public void update(Tweet tweet) {
-        Optional<Tweet> existingTweet = tweetRepository.findById(tweet.getId());
+    public void update(Long tweetId, String content) {
+        Optional<Tweet> existingTweet = tweetRepository.findById(tweetId);
 
         if (!existingTweet.isPresent()) {
             throw new TweetDoesNotExistException();
         }
 
-        existingTweet.get().setContent(tweet.getContent());
+        existingTweet.get().setContent(content);
 
         tweetRepository.save(existingTweet.get());
     }
 
     @Override
-    public void deleteAllByUser(Long userId) {
-        tweetRepository.deleteAllByUserId(userId);
+    public void delete(Tweet tweet) {
+        tweetRepository.delete(tweet);
     }
 
     @Override
@@ -63,12 +61,26 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
-    public List<Tweet> findAllByUserId(Long userId) {
-        return tweetRepository.findAllByUserId(userId);
+    public List<Tweet> findAllByUser(String username, LocalDate date) {
+        if (date != null) {
+            return findAllByUserOnGivenDate(username, date);
+        }
+
+        return tweetRepository.findAllByUserUsername(username);
     }
 
     @Override
-    public List<Tweet> findAllByUserOnGivenDate(Long userId, LocalDateTime dateTime) {
-        return null;
+    public List<Tweet> findAllByUserOnGivenDate(String username, LocalDate date) {
+        return tweetRepository.findAllByDateOfCreationAndUserUsername(date, username);
+    }
+
+    @Override
+    public Set<User> getAllUsersThatTweetedLastMonth() {
+        Month lastMonth = LocalDateTime.now().getMonth().minus(1);
+
+        return tweetRepository.findAll().stream()
+                .filter(tweet -> lastMonth.equals(tweet.getDateOfCreation().getMonth()))
+                .map(Tweet::getUser)
+                .collect(Collectors.toSet());
     }
 }

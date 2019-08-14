@@ -4,11 +4,12 @@ import com.endava.twittersimulation.model.Tweet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 public interface TweetRepository extends JpaRepository<Tweet, Long> {
-    void deleteAllByUserId(Long userId);
+    List<Tweet> findAllByUserUsername(String username);
 
-    List<Tweet> findAllByUserId(Long userId);
+    List<Tweet> findAllByDateOfCreationAndUserUsername(LocalDate date, String username);
 }

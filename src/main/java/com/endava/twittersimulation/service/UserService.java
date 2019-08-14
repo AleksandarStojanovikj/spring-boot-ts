@@ -5,7 +5,9 @@ import com.endava.twittersimulation.model.User;
 public interface UserService {
     User save(User user);
 
-    void changePassword(Long userId, String oldPassword, String newPassword);
+    void changePassword(String username, String oldPassword, String newPassword);
 
-    void delete(Long userId);
+    void delete(String username);
+
+    void deleteTweetsForUser(String username);
 }

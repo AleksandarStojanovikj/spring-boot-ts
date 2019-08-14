@@ -1,8 +1,10 @@
 package com.endava.twittersimulation.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "tweets")
@@ -15,16 +17,17 @@ public class Tweet {
     @NotBlank(message = "Content cannot be empty.")
     private String content;
 
-    private LocalDateTime dateOfCreation;
+    private LocalDate dateOfCreation;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user;
 
     public Tweet() {
     }
 
-    public Tweet(String content, LocalDateTime dateOfCreation, User userId) {
+    public Tweet(String content, LocalDate dateOfCreation, User userId) {
         this.content = content;
         this.dateOfCreation = dateOfCreation;
         this.user = userId;
@@ -46,11 +49,11 @@ public class Tweet {
         return this.content;
     }
 
-    public LocalDateTime getDateOfCreation() {
+    public LocalDate getDateOfCreation() {
         return dateOfCreation;
     }
 
-    public void setDateOfCreation(LocalDateTime dateOfCreation) {
+    public void setDateOfCreation(LocalDate dateOfCreation) {
         this.dateOfCreation = dateOfCreation;
     }
 
