@@ -1,5 +1,6 @@
 package com.endava.twittersimulation.web;
 
+import com.endava.twittersimulation.exceptions.UserDoesNotExistException;
 import com.endava.twittersimulation.model.Tweet;
 import com.endava.twittersimulation.model.User;
 import com.endava.twittersimulation.model.dto.TweetContentDto;
@@ -33,7 +34,7 @@ public class TweetController {
         try {
             Tweet savedTweet = tweetService.save(tweet);
             return new ResponseEntity<>(savedTweet, HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (UserDoesNotExistException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

@@ -36,6 +36,13 @@ public class User {
         this.tweets = tweets;
     }
 
+    public User(String username, String password, String email) {
+
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
     public void changePassword(String oldPassword, String newPassword) {
         if (this.password.equals(oldPassword)) {
             this.password = newPassword;
